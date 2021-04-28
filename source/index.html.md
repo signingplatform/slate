@@ -2,8 +2,9 @@
 title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
-  - shell
   - python
+  - shell
+
 
 toc_footers:
   - <a href='#'>Signing Platform</a>
@@ -22,12 +23,19 @@ Welcome to the Signing API! You can use our API to access Signing endpoints, whi
 
 We have language bindings in Shell, Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
 
+The Signing API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.
+
 # Installation
 Signing is compatible with python versions >= 3.8, and is available through PyPI:
 
 <code>pip install signing</code>
 
 All prerequisite packages will be automatically added to your environment.
+
+If you downloaded the source code, navigate to the cloned directory in a terminal, switch to your preferred python3 environment, then run
+
+<code>pip install .</code>
+
 
 Dependencies that are automatically installed include:
 
@@ -40,7 +48,7 @@ Dependencies that are automatically installed include:
 
 # Authentication
 
-## Initialize
+## Intialize
 
 > To authorize, use this code:
 
@@ -63,12 +71,16 @@ curl --request POST 'http://127.0.0.1:8000/sign/' \
 > Make sure to replace `clientid` with your client id.
 > Make sure to replace `secretkey` with your client secret key.
 
-Siging expects for the clientid and secret keyto be included in all API requests to the server in a header that looks like the following:
+The Signing API uses clientid and secret key to authenticate requests.
 
-### Python 
+Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, and so forth.
 
+Use your API key by setting it in the initial configuration of APIClient(). The Python library will then automatically send this key in each request.
+
+All API requests must be made over HTTPS. Calls made over plain HTTP will fail. API requests without "X-API-Key" and "X-API-Client" in headers will also fail.
+
+### Python
 ### Args
-
 Parameter | Default | Description
 --------- | ------- | -----------
 clientid | - | Your personal client id
@@ -77,7 +89,6 @@ url | - | Server URL (optional)
 
 
 ### HTTP
-
 ### Headers
 Parameter | Default | Description
 --------- | ------- | -----------
@@ -96,7 +107,9 @@ You must replace <code>clientid</code> and <code>secretkey</code> with your pers
 ```python
 from signing_client import SignResource
 
-sign_resource = SignResource(api_client, pdf_hash=hashlib.sha256(b'some').hexdigest(), signer_information={'name': 'fake_name'})
+sign_resource = SignResource(api_client = api_client, 
+                pdf_hash=hashlib.sha256(b'some').hexdigest(), 
+                signer_information={'name': 'fake_name'})
 sign_resource.sign()
 ```
 
@@ -143,6 +156,5 @@ Parameter | Default | Description
 pdf_hash | - | Content to sign
 signer_information | - | Information to sing the content
 
-<aside class="success">
-With valid authentication, you will get a signed document
-</aside>
+### Returns
+With valid authorization, api will return a signed document
